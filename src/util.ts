@@ -15,14 +15,17 @@ export const subscribable = <T>(value: T): TSubscribable<T> => {
     return new Proxy(result, {
         set(target, p, newValue) {
             if (target[p] !== newValue) {
+                console.debug("Subscribable proxy called"); 
                 target[p] = newValue;
             
                 for (const cb of target.cbs) {
                     cb(newValue);
                 }
+
+                return true;
             }
             
-            return true;
+            return false;
         },
     });
 }

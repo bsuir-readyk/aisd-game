@@ -8,9 +8,9 @@ const CVS_MAX_WIDTH = 600;
 const CVS_MAX_HEIGHT = 600;
 
 export class Canvas {
+    gameContext: TGameContext;
     cvs: HTMLCanvasElement;
     ctx: CanvasRenderingContext2D;
-    gameContext: TGameContext;
 
     constructor(selector: string, gameContext: TGameContext) {
         const cvs: HTMLCanvasElement | null = document.querySelector(selector);
@@ -49,7 +49,7 @@ export class Canvas {
         this.cvs.parentElement!.style.width = this.cvs.width + "px";
     }
 
-    fillBoxes() {
+    drawBg() {
         const level = this.gameContext.currentLevel.value.settings;
         const BOX = this.gameContext.BOX;
 
@@ -60,6 +60,6 @@ export class Canvas {
             }
         }
     }
-
-    subscribe(subj, event) {}
 }
+
+export type TCanvas = Canvas;
