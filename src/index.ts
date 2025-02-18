@@ -31,10 +31,26 @@ setControls({
     top: () => { player.move("top") },
     right: () => { player.move("right") },
     bottom: () => { player.move("bottom") },
+    interract: () => {
+        const pos = player.pos.value;
+        const neibours = [
+            gameContext.onPos({x: pos.x, y: pos.y-1}),
+            gameContext.onPos({x: pos.x+1, y: pos.y}),
+            gameContext.onPos({x: pos.x, y: pos.y+1}),
+            gameContext.onPos({x: pos.x-1, y: pos.y}),
+        ];
+        for (const obj of neibours) {
+            if (player.doInterract(obj)) {
+                break;
+            }
+        }
+    },
+
     keyboard: {
         left: ["a", "arrowleft"],
         top: ["w", "arrowup"],
         right: ["d", "arrowright"],
         bottom: ["s", "arrowdown"],
+        interract: ['e', 'shift'],
     }
 })

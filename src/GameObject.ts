@@ -1,5 +1,6 @@
 import { TCanvas } from "./Canvas";
 import { type TGameContext } from "./GameContext";
+import { TPlayer } from "./objects/Player.obj";
 import { subscribable, TSubscribable } from "./util";
 
 type InterractCB = (...args: any[]) => any;
@@ -62,7 +63,5 @@ export abstract class GameObject {
 
     abstract draw(...args: any[]): void;
 
-    interract(interraction: keyof typeof this.interractions): void {
-        this.interractions[interraction]();
-    };
+    interract(opt: {player: TPlayer}): boolean { return false };
 }

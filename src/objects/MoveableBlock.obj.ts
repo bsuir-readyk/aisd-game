@@ -1,14 +1,12 @@
 import { TGameContext } from "../GameContext";
+import { resolveMoveDir } from "../util";
 import { Moveable } from "./Moveable.obj";
+import { TPlayer } from "./Player.obj";
 
 export class MoveableBlockObj extends Moveable {
     name = "block";
 
     color: string;
-
-    protected interractions = {
-        punch: () => { alert("Ouch!"); }
-    };
 
     constructor(gc: TGameContext, start: {x:number, y: number}, size: {x:number; y:number}, color: string) {
         super(gc, start, size);
@@ -25,5 +23,11 @@ export class MoveableBlockObj extends Moveable {
             this.size.value.x*BOX,
             this.size.value.y*BOX
         );
+    }
+
+    interract(opt: { player: TPlayer; }) {
+        const dir = resolveMoveDir( this.pos.value, opt.player.pos.value);
+        this.move(dir);
+        return true;
     }
 }

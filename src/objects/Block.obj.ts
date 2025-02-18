@@ -1,5 +1,7 @@
 import { TGameContext } from "../GameContext";
 import { GameObject } from "../GameObject";
+import { resolveMoveDir } from "../util";
+import { TPlayer } from "./Player.obj";
 
 export class BlockObj extends GameObject {
     name = "block";
@@ -25,5 +27,10 @@ export class BlockObj extends GameObject {
             this.size.value.x*BOX,
             this.size.value.y*BOX
         );
+    }
+
+    interract() {
+        alert('Arrrgh....');
+        return true;
     }
 }

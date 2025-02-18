@@ -1,3 +1,5 @@
+import { TMoveDir } from "./objects/Moveable.obj";
+
 export type TSubscribable<T> = {
     value: T;
     readonly addOnUpdate: (cb: (newValue: T)=>void) => void;
@@ -28,4 +30,28 @@ export const subscribable = <T>(value: T): TSubscribable<T> => {
             return false;
         },
     });
+}
+
+export type Txy = {x: number, y: number};
+
+export const resolveMoveDir = (from: Txy, to: Txy): TMoveDir => {
+    const errResolveMoveDir = new Error('Cant resolve move direction for: ' + JSON.stringify(from) + JSON.stringify(to));
+    if (from.x !== to.x && from.y !== to.y) {
+        throw errResolveMoveDir;
+    }
+
+    if (from.x < to.x) {
+        return 'right';
+    }
+    if (from.x > to.x) {
+        return 'left';
+    }
+    if (from.y < to.y) {
+        return 'bottom';
+    }
+    if (from.y > to.y) {
+        return 'top';
+    }
+
+    throw errResolveMoveDir;
 }

@@ -1,4 +1,5 @@
 import type { TGameContext } from "../GameContext";
+import { GameObject } from "../GameObject";
 import { Moveable } from "./Moveable.obj";
 
 const GAP = 0.2;
@@ -21,4 +22,15 @@ export class PlayerObj extends Moveable {
         const sy = this.size.value.y * BOX;
         this.canvas.ctx.fillRect(x, y, sx, sy);
     }
+
+    doInterract(subj: GameObject | undefined): boolean {
+        if (!subj || !subj.interract) {
+            return false;
+        }
+
+        subj.interract({player: this});
+        return true;
+    }
 }
+
+export type TPlayer = PlayerObj;
