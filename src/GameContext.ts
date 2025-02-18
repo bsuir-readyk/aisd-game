@@ -1,29 +1,31 @@
-import { canvas } from ".";
+import { TCanvas } from "./Canvas";
 import { GameObject } from "./GameObject";
 import { levels, TLevel, TLevelName, TLevels } from "./presets";
 import { subscribable, TSubscribable } from "./util";
 
 export class GameContext {
-    BOX: number;
     /** @description x * level.width + y */
     objects: TSubscribable<Record<number, GameObject>> = subscribable({});
     currentLevel: TSubscribable<Readonly<{
         settings: TLevel;
         name: TLevelName;
     }>>
+    canvas: TCanvas;
 
-    constructor(name: TLevelName) {
-        this.BOX = 32;
+    constructor(cvs: TCanvas, levelsSetup: {levels: TLevels, name: TLevelName}) {
+        this.canvas = cvs;
         
         // @ts-expect-error
         this.currentLevel = subscribable({
-            settings: levels[name],
-            name,
+            settings: levelsSetup.levels[levelsSetup.name],
+            name: levelsSetup.name,
         });
 
+        const obj = levelsSetup.levels[levelsSetup.name].makeMap(this);
+
         this.objects.addOnUpdate(()=>{
+            this.canvas.drawBg(this.currentLevel.value.settings);
             for(const obj of Object.values(this.objects.value)) {
-                canvas.drawBg();
                 obj.draw();
             }
         })
@@ -38,7 +40,7 @@ export class GameContext {
 
     onPos(pos: {x: number, y: number}): GameObject {
         const level = this.currentLevel.value.settings;
-        return this.objects.value[pos.x*level.width + pos.y];
+        return this.objects.value[pos.x * level.width + pos.y];
     }
 }
 

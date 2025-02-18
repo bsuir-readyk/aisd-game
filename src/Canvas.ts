@@ -1,6 +1,4 @@
-import { canvas } from ".";
-import { type TGameContext } from "./GameContext";
-import { levels, type TLevel } from "./presets";
+import { type TLevel } from "./presets";
 
 export const CVS_SELECTOR = "#cvs";
 
@@ -8,11 +6,11 @@ const CVS_MAX_WIDTH = 600;
 const CVS_MAX_HEIGHT = 600;
 
 export class Canvas {
-    gameContext: TGameContext;
+    BOX: number;
     cvs: HTMLCanvasElement;
     ctx: CanvasRenderingContext2D;
 
-    constructor(selector: string, gameContext: TGameContext) {
+    constructor(selector: string) {
         const cvs: HTMLCanvasElement | null = document.querySelector(selector);
         if (cvs === null) {
             const err = new Error("Cant find \"#cvs\"");
@@ -29,19 +27,16 @@ export class Canvas {
 
         this.cvs = cvs;
         this.ctx = ctx;
-        this.gameContext = gameContext;
     }
 
-    resize() {
-        const currentLevel = this.gameContext.currentLevel.value.settings;
-
-        this.gameContext.BOX = Math.min(
-            Math.min(document.body.clientWidth, CVS_MAX_WIDTH) / currentLevel.width,
-            Math.min(document.body.clientHeight, CVS_MAX_HEIGHT) / currentLevel.height,
+    resize(level: TLevel) {
+        this.BOX = Math.min(
+            Math.min(document.body.clientWidth, CVS_MAX_WIDTH) / level.width,
+            Math.min(document.body.clientHeight, CVS_MAX_HEIGHT) / level.height,
         )
 
-        this.cvs.width = this.gameContext.BOX * currentLevel.width;
-        this.cvs.height = this.gameContext.BOX * currentLevel.height;
+        this.cvs.width = this.BOX * level.width;
+        this.cvs.height = this.BOX * level.height;
 
         this.cvs.style.width = this.cvs.width + "px";
         this.cvs.style.height = this.cvs.height + "px";
@@ -49,9 +44,8 @@ export class Canvas {
         this.cvs.parentElement!.style.width = this.cvs.width + "px";
     }
 
-    drawBg() {
-        const level = this.gameContext.currentLevel.value.settings;
-        const BOX = this.gameContext.BOX;
+    drawBg(level: TLevel) {
+        const BOX = this.BOX;
 
         for (let i=0; i<level.width; i++) {
             for (let j=0; j<level.height; j++) {

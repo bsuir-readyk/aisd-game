@@ -1,7 +1,7 @@
 import { TGameContext } from "../GameContext";
-import { GameObject } from "../GameObject";
+import { Moveable } from "./Moveable.obj";
 
-export class BlockObj extends GameObject {
+export class MoveableBlockObj extends Moveable {
     name = "block";
 
     color: string;

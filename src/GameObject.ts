@@ -2,7 +2,7 @@ import { TCanvas } from "./Canvas";
 import { type TGameContext } from "./GameContext";
 import { subscribable, TSubscribable } from "./util";
 
-type InterractCB = () => void;
+type InterractCB = (...args: any[]) => any;
 type TInterractions = Record<string, InterractCB>
 
 type TGameObjectOptions = {
@@ -12,7 +12,12 @@ type TGameObjectOptions = {
 
 const updObjects = (subj: GameObject) => {
     const level = subj.gameContext.currentLevel.value.settings;
-    const newObj = {...subj.gameContext.objects.value}; 
+    const newObj = {...subj.gameContext.objects.value};
+    for (const [pos, obj] of Object.entries(subj.gameContext.objects.value)) {
+        if (obj === subj) {
+            delete newObj[pos];
+        }
+    }
     for (let i=0; i<subj.size.value.x; i++) {
         for (let j=0; j<subj.size.value.y; j++) {
             const x = subj.pos.value.x + i;
@@ -44,8 +49,8 @@ export abstract class GameObject {
 
     protected abstract readonly interractions: TInterractions;
 
-    constructor(gameCtx: TGameContext, canvas: TCanvas, start: {x: number, y: number}, size: {x: number, y: number}) {
-        this.canvas = canvas;
+    constructor(gameCtx: TGameContext, start: {x: number, y: number}, size: {x: number, y: number}) {
+        this.canvas = gameCtx.canvas;
         this.gameContext = gameCtx;
         this.pos = subscribable(start);
         this.size = subscribable(size);

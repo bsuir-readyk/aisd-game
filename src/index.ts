@@ -1,4 +1,5 @@
 import { Canvas, CVS_SELECTOR } from "./Canvas";
+import { setControls } from "./controls";
 import { GameContext } from "./GameContext";
 import { PlayerObj } from "./objects/Player.obj";
 import { levels, TLevelName } from "./presets";
@@ -6,25 +7,34 @@ import { levels, TLevelName } from "./presets";
 
 console.debug = (...data: any[]) => console.log("[DEBUG]: ", ...data);
 
-
 const START_LEVEL_NAME: TLevelName = "hello";
 const startLevel = levels[START_LEVEL_NAME];
 
-const gameContext = new GameContext(START_LEVEL_NAME);
+const canvas = new Canvas(CVS_SELECTOR);
+const gameContext = new GameContext(canvas, {levels, name: START_LEVEL_NAME});
+canvas.resize(gameContext.currentLevel.value.settings);
 
-export const canvas = new Canvas(CVS_SELECTOR, gameContext)
+const player = new PlayerObj(gameContext, startLevel.player.start);
 
-gameContext.currentLevel.addOnUpdate(()=>{
-    canvas.resize();
-    canvas.drawBg();    
-});
+const onLevel = () => {
+    canvas.drawBg(gameContext.currentLevel.value.settings);
+    for (const obj of Object.values(gameContext.objects.value)) {
+        obj.draw(); 
+        console.debug(obj.name);
+    }
+};
+onLevel();
+gameContext.currentLevel.addOnUpdate(onLevel);
 
-canvas.resize();
-canvas.drawBg();
-
-const player = new PlayerObj(gameContext, canvas, startLevel.player.start);
-player.draw();
-
-setTimeout(()=>{
-    player.move("top");
-}, 1000);
+setControls({
+    left: () => { player.move("left"); },
+    top: () => { player.move("top") },
+    right: () => { player.move("right") },
+    bottom: () => { player.move("bottom") },
+    keyboard: {
+        left: ["a", "arrowleft"],
+        top: ["w", "arrowup"],
+        right: ["d", "arrowright"],
+        bottom: ["s", "arrowdown"],
+    }
+})
