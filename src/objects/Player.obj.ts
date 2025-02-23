@@ -8,22 +8,24 @@ import { Moveable } from "./Moveable.abs.obj";
 
 const GAP = 0.2;
 
+type TInventory = Record<TInventoryItem["name"], TInventoryItem>;
+
 export class PlayerObj extends Moveable {
     name = "player";
     
     interractions = {};
 
-    inventory: TSubscribable<Record<TInventoryItem["name"], TInventoryItem>> = subscribable({});
+    inventory: TSubscribable<TInventory> = subscribable({});
 
     constructor(gameCtx: TGameContext, pos: {x: number, y: number}) {
         super(gameCtx, pos, {x: 1-GAP, y: 1-GAP});
+        
         const onPlayerMove = getOnPlayerMove(this);
         this.pos.addOnUpdate(onPlayerMove, "Handle player move");
         onPlayerMove();
-        this.inventory.addOnUpdate((n)=>{
-            console.log(Object.values(n));
-            redrawItems(Object.values(n));
-        }, "Redraw inventory on player.inventory update");
+        
+        this.inventory.addOnUpdate((n)=>redrawItems(Object.values(n)), "Redraw inventory on player.inventory update");
+        redrawItems(Object.values(this.inventory.value));
     }
 
     draw() {
@@ -55,8 +57,7 @@ export class PlayerObj extends Moveable {
 
 export type TPlayer = PlayerObj;
 
-
-export const getOnPlayerMove = (player: TPlayer) => {
+const getOnPlayerMove = (player: TPlayer) => {
     const btns: HTMLElement[] = [];
     const onPlayerMove = () => {
         let b: typeof btns[number] | undefined;

@@ -1,5 +1,5 @@
 import { GameObject } from "../GameObject";
-import { getNewPos } from "../util";
+import { getNewPos, Txy } from "../util";
 
 export type TMoveDir = "top" | "right" | "bottom" | "left";
 
@@ -9,9 +9,11 @@ export abstract class Moveable extends GameObject {
         collidable: true,
     };
 
-    move(dir: TMoveDir): boolean {
+    move(dir: TMoveDir, triggeredOn: Txy): boolean {
+        const pos = this.pos.value;
         const newPos = getNewPos(this.pos.value, dir);
-        const subj = this.gameContext.onPos(newPos);
+        const triggerPos = getNewPos(triggeredOn, dir);
+        const subj = this.gameContext.onPos(triggerPos);
         
         if(subj === undefined) {
             this.pos.value = newPos;
@@ -19,7 +21,7 @@ export abstract class Moveable extends GameObject {
         }
 
         if (subj instanceof Moveable) {
-            const success = subj.move(dir);
+            const success = subj.move(dir, triggerPos);
             if (!success) {
                 return false;
             }

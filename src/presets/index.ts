@@ -22,7 +22,7 @@ export const levels = {
             new BlockObj(gc, {x: 5, y: 13}, {x: 3, y: 1}, 'black'),
             new MoveableBlockObj(gc, {x: 2, y: 10}, {x: 1, y: 1}, 'green'),
             new DoorObj(gc, {x: 0, y: 0}, SimpleKey, () => {
-                gc.setCurrentLevel("claustro");
+                gc.setCurrentLevel("claus");
             }),
             new PlayerObj(gc, {x: 5, y: 15}),
             new GiveAwayBlock(gc, {x: 5, y: 0}, {x:1, y:1}, SimpleKey)
@@ -39,21 +39,17 @@ export const levels = {
             new GiveAwayBlock(gc, {x: 2, y: 0}, {x:1, y:1}, SimpleKey)
         ]
     },
-    claustro: {
+    claus: {
         width: 6,
-        height: 5,
+        height: 4,
         makeMap: (gc) => [
             new BlockObj(gc, {x: 0, y: 0}, {x: 6, y: 1}, 'black'),
-            new BlockObj(gc, {x: 0, y: 0}, {x: 1, y: 2}, 'black'),
-            new BlockObj(gc, {x: 0, y: 3}, {x: 1, y: 2}, 'black'),
-            new BlockObj(gc, {x: 5, y: 0}, {x: 1, y: 5}, 'black'),
-            new BlockObj(gc, {x: 0, y: 4}, {x: 6, y: 1}, 'black'),
+            new BlockObj(gc, {x: 0, y: 1}, {x: 1, y: 1}, 'black'),
+            new BlockObj(gc, {x: 0, y: 3}, {x: 3, y: 1}, 'black'),
+            new BlockObj(gc, {x: 5, y: 1}, {x: 1, y: 2}, 'black'),
             new PlayerObj(gc, {x: 1, y: 2}),
-            new MoveableBlockObj(gc, {x: 2, y: 2}, {x: 1, y: 1}, "green"),
-            new BlockObj(gc, {x: 1, y: 3}, {x: 2, y: 1}, 'black'),
-            new BlockObj(gc, {x: 4, y: 3}, {x: 1, y: 1}, 'black'),
-            // new BlockObj(gc, {x: 2, y: 1}, {x: 1, y: 1}, 'black'),
-            new BlockObj(gc, {x: 1, y: 1}, {x:1, y:1}, 'black'),
+            new MoveableBlockObj(gc, {x: 3, y: 2}, {x: 2, y: 1}, "green"),
+            new BlockObj(gc, {x: 4, y: 3}, {x: 3, y: 1}, 'black'),
             new DoorObj(gc, {x: 0, y: 2}, SimpleKey, ()=>{}),
             new GiveAwayBlock(gc, {x: 3, y: 3}, {x:1, y:1}, SimpleKey)
         ]

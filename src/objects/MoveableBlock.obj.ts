@@ -1,6 +1,6 @@
 import { TGameContext } from "../GameContext";
 import { TInterractionOpt } from "../GameObject";
-import { resolveMoveDir } from "../util";
+import { getNewPos, resolveMoveDir } from "../util";
 import { Moveable } from "./Moveable.abs.obj";
 import { TPlayer } from "./Player.obj";
 
@@ -10,8 +10,8 @@ export class MoveableBlockObj extends Moveable {
     interractions = {
         pull: {
             cb: (opt: TInterractionOpt) => {
-                const dir = resolveMoveDir( this.pos.value, opt.player.pos.value);
-                this.move(dir);
+                const dir = resolveMoveDir(this.pos.value, opt.player.pos.value);
+                this.move(dir, this.pos.value);
                 return true;
             },
             text: "Pull object back",

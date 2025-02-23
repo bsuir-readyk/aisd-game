@@ -51,10 +51,10 @@ export class GameContext {
             }
 
             setControls({
-                left: () => { player.move("left"); },
-                top: () => { player.move("top") },
-                right: () => { player.move("right") },
-                bottom: () => { player.move("bottom") },
+                left: () => { player.move("left", player.pos.value); },
+                top: () => { player.move("top", player.pos.value) },
+                right: () => { player.move("right", player.pos.value) },
+                bottom: () => { player.move("bottom", player.pos.value) },
                 interract: () => {
                     console.warn("Not implemented");
                 },
