@@ -20,7 +20,6 @@ export const createInterractionButton = (text: string): HTMLElement => {
         div.style.top = div.getBoundingClientRect().top + "px";
         div.style.width = div.getBoundingClientRect().width + "px"
         div.style.position = "fixed";
-        console.log(div.getBoundingClientRect().left)
         setTimeout(()=>realRemove.apply(this), interractionsItemTransitionTime);
     }
 

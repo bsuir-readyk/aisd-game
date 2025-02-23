@@ -1,12 +1,11 @@
 import { Canvas, CVS_SELECTOR } from "./Canvas";
-import { setControls, createInterractionButton } from "./controls";
+import { setControls } from "./controls";
+import { redrawItems } from "./controls/inventory";
 import { GameContext } from "./GameContext";
-import { getOnPlayerMove, PlayerObj, TPlayer } from "./objects/Player.obj";
+import { getOnPlayerMove, PlayerObj } from "./objects/Player.obj";
 import { levels, TLevelName } from "./presets";
-import { getNewPos } from "./util";
 
-
-console.debug = (...data: any[]) => console.log("[DEBUG]: ", ...data);
+console.debug = (...data: any[]) => window["DEV"] ? console.log("[DEBUG]: ", ...data) : {};
 
 const START_LEVEL_NAME: TLevelName = "hello";
 const startLevel = levels[START_LEVEL_NAME];
@@ -19,6 +18,10 @@ export const player = new PlayerObj(gameContext, startLevel.player.start);
 export const onPlayerMove = getOnPlayerMove(player);
 player.pos.addOnUpdate(onPlayerMove, "Handle player move");
 onPlayerMove();
+player.inventory.addOnUpdate((n)=>{
+    console.log(Object.values(n));
+    redrawItems(Object.values(n));
+}, "Redraw inventory on player.inventory update");
 
 const onLevel = () => {
     canvas.drawBg(gameContext.currentLevel.value.settings);

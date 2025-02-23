@@ -49,7 +49,7 @@ export class Canvas {
 
         for (let i=0; i<level.width; i++) {
             for (let j=0; j<level.height; j++) {
-                this.ctx.fillStyle = (i+j) % 2 ? "red" : "blue"
+                this.ctx.fillStyle = (i+j) % 2 ? "#334433" : "#443344"
                 this.ctx.fillRect(i*BOX, j*BOX, BOX, BOX);
             }
         }

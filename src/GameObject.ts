@@ -25,7 +25,7 @@ const updObjects = (subj: GameObject) => {
             const x = subj.pos.value.x + i;
             const y = subj.pos.value.y + j;
             
-            newObj[x * level.width + y] = subj;
+            newObj[y * level.width + x] = subj;
         }
     }
     subj.gameContext.objects.value = newObj;

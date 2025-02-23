@@ -2,7 +2,7 @@ import { createInterractionButton, setControls } from "../controls";
 import type { TGameContext } from "../GameContext";
 import { GameObject } from "../GameObject";
 import { TInventoryItem } from "../presets/inventory";
-import { getNewPos } from "../util";
+import { getNewPos, subscribable, TSubscribable } from "../util";
 import { Moveable } from "./Moveable.abs.obj";
 
 const GAP = 0.2;
@@ -12,7 +12,7 @@ export class PlayerObj extends Moveable {
     
     interractions = {};
 
-    inventory: Record<TInventoryItem["name"], TInventoryItem>
+    inventory: TSubscribable<Record<TInventoryItem["name"], TInventoryItem>> = subscribable({});
 
     constructor(gameCtx: TGameContext, pos: {x: number, y: number}) {
         super(gameCtx, pos, {x: 1-GAP, y: 1-GAP});
@@ -35,6 +35,13 @@ export class PlayerObj extends Moveable {
 
         subj.interract(interractionName, {player: this});
         return true;
+    }
+
+    addInventory(item: TInventoryItem) {
+        this.inventory.value = {
+            ...this.inventory.value,
+            [item.name]: item,
+        }
     }
 }
 

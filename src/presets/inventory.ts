@@ -2,11 +2,12 @@ const SIZE = 32;
 
 export type TInventoryItem = {
     name: string;
-    img: MediaImage;
+    img: string;
 }
 
-const SimpleKeyImage = new Image()
+// const SimpleKeyImage = new Image()
+// SimpleKeyImage.src = ;
 export const SimpleKey: TInventoryItem = {
     name: "SimpleKey",
-    img: new Image(),
+    img: "./simpleKey.jpg",
 }

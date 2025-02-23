@@ -28,7 +28,7 @@ if (process.env.DEV) {
     fs.watch("./static", {recursive: true}, copyStatic);
     const ctx = await esbuild.context({
         ...generalCfg,
-        banner: {js: "new EventSource('/esbuild').addEventListener('change', () => location.reload());"},
+        banner: {js: "window['DEV']=true; new EventSource('/esbuild').addEventListener('change', () => location.reload());"},
         sourcemap: true
     })
     await ctx.watch();

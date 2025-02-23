@@ -12,7 +12,7 @@ export class DoorObj extends GameObject {
         },
         open: {
             cb: ({player}: TInterractionOpt) => {
-                if (!player.inventory[this.key.name]) {
+                if (!player.inventory.value[this.key.name]) {
                     alert("You need to have {" + this.key.name + "} to open the door");
                     return;
                 }

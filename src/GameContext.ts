@@ -40,7 +40,7 @@ export class GameContext {
 
     onPos(pos: {x: number, y: number}): GameObject | undefined {
         const level = this.currentLevel.value.settings;
-        return this.objects.value[pos.x * level.width + pos.y];
+        return this.objects.value[pos.y * level.width + pos.x];
     }
 }
 

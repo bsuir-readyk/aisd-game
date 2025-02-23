@@ -6,7 +6,7 @@ export class BlockObj extends GameObject {
 
     color: string;
 
-    interractions = {
+    interractions: GameObject["interractions"] = {
         punch: {
             cb: () => { alert("Ouch!"); },
             text: "punch block"
