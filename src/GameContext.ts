@@ -1,5 +1,7 @@
 import { TCanvas } from "./Canvas";
+import { setControls } from "./controls";
 import { GameObject } from "./GameObject";
+import { PlayerObj, TPlayer } from "./objects/Player.obj";
 import { levels, TLevel, TLevelName, TLevels } from "./presets";
 import { subscribable, TSubscribable } from "./util";
 
@@ -12,16 +14,14 @@ export class GameContext {
     }>>
     canvas: TCanvas;
 
-    constructor(cvs: TCanvas, levelsSetup: {levels: TLevels, name: TLevelName}) {
+    constructor(cvs: TCanvas, startLevel: TLevelName) {
         this.canvas = cvs;
         
         // @ts-expect-error
         this.currentLevel = subscribable({
-            settings: levelsSetup.levels[levelsSetup.name],
-            name: levelsSetup.name,
+            settings: levels[startLevel],
+            name: startLevel,
         });
-
-        const obj = levelsSetup.levels[levelsSetup.name].makeMap(this);
 
         this.objects.addOnUpdate(()=>{
             this.canvas.drawBg(this.currentLevel.value.settings);
@@ -29,6 +29,48 @@ export class GameContext {
                 obj.draw();
             }
         }, "Redraw bg and all objects");
+
+        const onLevel = () => {
+            this.objects.value = [];
+            levels[this.currentLevel.value.name].makeMap(this);
+            this.canvas.resize(this.currentLevel.value.settings)
+            this.canvas.drawBg(this.currentLevel.value.settings);
+            
+            let player: TPlayer | undefined;
+
+            for (const obj of Object.values(this.objects.value)) {
+                if (obj instanceof PlayerObj) {
+                    player = obj;
+                }
+                obj.draw(); 
+                console.debug(obj.name);
+            }
+
+            if (!player) {
+                throw new Error("Player not found on level: " + this.currentLevel.value.name);
+            }
+
+            setControls({
+                left: () => { player.move("left"); },
+                top: () => { player.move("top") },
+                right: () => { player.move("right") },
+                bottom: () => { player.move("bottom") },
+                interract: () => {
+                    console.warn("Not implemented");
+                },
+            
+                keyboard: {
+                    left: ["a", "arrowleft"],
+                    top: ["w", "arrowup"],
+                    right: ["d", "arrowright"],
+                    bottom: ["s", "arrowdown"],
+                    interract: ['e', 'shift'],
+                }
+            })
+            
+        };
+        onLevel();
+        this.currentLevel.addOnUpdate(onLevel, "Handle level update");
     }
 
     setCurrentLevel(levelName: TLevelName) {

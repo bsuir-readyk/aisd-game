@@ -1,4 +1,5 @@
 import { createInterractionButton, setControls } from "../controls";
+import { redrawItems } from "../controls/inventory";
 import type { TGameContext } from "../GameContext";
 import { GameObject } from "../GameObject";
 import { TInventoryItem } from "../presets/inventory";
@@ -16,6 +17,13 @@ export class PlayerObj extends Moveable {
 
     constructor(gameCtx: TGameContext, pos: {x: number, y: number}) {
         super(gameCtx, pos, {x: 1-GAP, y: 1-GAP});
+        const onPlayerMove = getOnPlayerMove(this);
+        this.pos.addOnUpdate(onPlayerMove, "Handle player move");
+        onPlayerMove();
+        this.inventory.addOnUpdate((n)=>{
+            console.log(Object.values(n));
+            redrawItems(Object.values(n));
+        }, "Redraw inventory on player.inventory update");
     }
 
     draw() {

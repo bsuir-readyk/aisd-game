@@ -17,6 +17,7 @@ export class DoorObj extends GameObject {
                     return;
                 }
                 alert("Success!!");
+                this.onOpen();
             },
             text: "Try to open door",
         }
