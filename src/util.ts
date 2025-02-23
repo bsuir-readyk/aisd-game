@@ -1,4 +1,4 @@
-import { TMoveDir } from "./objects/Moveable.obj";
+import { TMoveDir } from "./objects/Moveable.abs.obj";
 
 export type TSubscribable<T> = {
     value: T;

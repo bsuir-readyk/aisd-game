@@ -1,8 +1,9 @@
 import { createInterractionButton, setControls } from "../controls";
 import type { TGameContext } from "../GameContext";
 import { GameObject } from "../GameObject";
-import { getNewPos, resolveMoveDir } from "../util";
-import { Moveable } from "./Moveable.obj";
+import { TInventoryItem } from "../presets/inventory";
+import { getNewPos } from "../util";
+import { Moveable } from "./Moveable.abs.obj";
 
 const GAP = 0.2;
 
@@ -10,6 +11,8 @@ export class PlayerObj extends Moveable {
     name = "player";
     
     interractions = {};
+
+    inventory: Record<TInventoryItem["name"], TInventoryItem>
 
     constructor(gameCtx: TGameContext, pos: {x: number, y: number}) {
         super(gameCtx, pos, {x: 1-GAP, y: 1-GAP});

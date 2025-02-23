@@ -1,6 +1,7 @@
 import { TGameContext } from "../GameContext";
+import { TInterractionOpt } from "../GameObject";
 import { resolveMoveDir } from "../util";
-import { Moveable } from "./Moveable.obj";
+import { Moveable } from "./Moveable.abs.obj";
 import { TPlayer } from "./Player.obj";
 
 export class MoveableBlockObj extends Moveable {
@@ -8,7 +9,7 @@ export class MoveableBlockObj extends Moveable {
 
     interractions = {
         pull: {
-            cb: (opt: { player: TPlayer; }) => {
+            cb: (opt: TInterractionOpt) => {
                 const dir = resolveMoveDir( this.pos.value, opt.player.pos.value);
                 this.move(dir);
                 return true;

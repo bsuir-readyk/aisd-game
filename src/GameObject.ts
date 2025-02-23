@@ -3,7 +3,8 @@ import { type TGameContext } from "./GameContext";
 import { TPlayer } from "./objects/Player.obj";
 import { subscribable, TSubscribable } from "./util";
 
-type InterractCB = (...args: any[]) => any;
+export type TInterractionOpt = {player: TPlayer};
+type InterractCB = (options: TInterractionOpt) => any;
 type TInterractions = Record<string, {cb: InterractCB, text: string}>
 
 type TGameObjectOptions = {
@@ -63,7 +64,7 @@ export abstract class GameObject {
 
     abstract draw(...args: any[]): void;
 
-    interract(interractionName: keyof typeof this.interractions, opt: {player: TPlayer}): boolean {
+    interract(interractionName: keyof typeof this.interractions, opt: TInterractionOpt): boolean {
         const success = this.interractions[interractionName]?.cb(opt);
         return success;
     };
