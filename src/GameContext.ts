@@ -28,7 +28,7 @@ export class GameContext {
             for(const obj of Object.values(this.objects.value)) {
                 obj.draw();
             }
-        })
+        }, "Redraw bg and all objects");
     }
 
     setCurrentLevel(levelName: TLevelName) {

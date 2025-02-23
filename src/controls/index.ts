@@ -1,3 +1,5 @@
+export { createInterractionButton } from './interractions';
+
 const CONTROL_SELECTOR_left = "#control-left";
 const CONTROL_SELECTOR_top = "#control-top";
 const CONTROL_SELECTOR_right = "#control-right";

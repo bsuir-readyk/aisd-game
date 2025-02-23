@@ -6,6 +6,17 @@ import { TPlayer } from "./Player.obj";
 export class MoveableBlockObj extends Moveable {
     name = "block";
 
+    interractions = {
+        pull: {
+            cb: (opt: { player: TPlayer; }) => {
+                const dir = resolveMoveDir( this.pos.value, opt.player.pos.value);
+                this.move(dir);
+                return true;
+            },
+            text: "Pull object back",
+        }
+    };
+
     color: string;
 
     constructor(gc: TGameContext, start: {x:number, y: number}, size: {x:number; y:number}, color: string) {
@@ -23,11 +34,5 @@ export class MoveableBlockObj extends Moveable {
             this.size.value.x*BOX,
             this.size.value.y*BOX
         );
-    }
-
-    interract(opt: { player: TPlayer; }) {
-        const dir = resolveMoveDir( this.pos.value, opt.player.pos.value);
-        this.move(dir);
-        return true;
     }
 }

@@ -1,4 +1,5 @@
 import { GameObject } from "../GameObject";
+import { getNewPos } from "../util";
 
 export type TMoveDir = "top" | "right" | "bottom" | "left";
 
@@ -8,15 +9,8 @@ export abstract class Moveable extends GameObject {
         collidable: true,
     };
 
-    protected interractions: {};
-
     move(dir: TMoveDir): boolean {
-        const newPos = structuredClone(this.pos.value);
-        if (dir === "top") { newPos.y--; }
-        if (dir === "bottom") { newPos.y++; }
-        if (dir === "left") { newPos.x--; }
-        if (dir === "right") { newPos.x++; }
-
+        const newPos = getNewPos(this.pos.value, dir);
         const subj = this.gameContext.onPos(newPos);
         
         if(subj === undefined) {

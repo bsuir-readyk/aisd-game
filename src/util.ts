@@ -2,22 +2,24 @@ import { TMoveDir } from "./objects/Moveable.obj";
 
 export type TSubscribable<T> = {
     value: T;
-    readonly addOnUpdate: (cb: (newValue: T)=>void) => void;
+    readonly addOnUpdate: (cb: (newValue: T)=>void, description: string) => void;
     readonly cbs: ((newValue: T)=>void)[];
 };
 
 export const subscribable = <T>(value: T): TSubscribable<T> => {
     const result: TSubscribable<T> = {
         value,
-        addOnUpdate: function(cb) {
-            this.cbs.push(cb);
+        addOnUpdate: function(cb, description) {
+            this.cbs.push((...args: Parameters<TSubscribable<T>["cbs"][number]>) => {
+                console.debug(description);
+                cb(...args);
+            });
         },
         cbs: [],
     };
     return new Proxy(result, {
         set(target, p, newValue) {
             if (target[p] !== newValue) {
-                console.debug("Subscribable proxy called"); 
                 target[p] = newValue;
             
                 for (const cb of target.cbs) {
@@ -54,4 +56,14 @@ export const resolveMoveDir = (from: Txy, to: Txy): TMoveDir => {
     }
 
     throw errResolveMoveDir;
+}
+
+export const getNewPos = (pos: Txy, dir: TMoveDir): Txy => {
+    const newPos = structuredClone(pos);
+    if (dir === "top") { newPos.y--; }
+    if (dir === "bottom") { newPos.y++; }
+    if (dir === "left") { newPos.x--; }
+    if (dir === "right") { newPos.x++; }
+
+    return newPos;
 }

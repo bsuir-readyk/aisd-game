@@ -1,5 +1,7 @@
+import { createInterractionButton, setControls } from "../controls";
 import type { TGameContext } from "../GameContext";
 import { GameObject } from "../GameObject";
+import { getNewPos, resolveMoveDir } from "../util";
 import { Moveable } from "./Moveable.obj";
 
 const GAP = 0.2;
@@ -7,7 +9,7 @@ const GAP = 0.2;
 export class PlayerObj extends Moveable {
     name = "player";
     
-    protected interractions = {};
+    interractions = {};
 
     constructor(gameCtx: TGameContext, pos: {x: number, y: number}) {
         super(gameCtx, pos, {x: 1-GAP, y: 1-GAP});
@@ -23,14 +25,44 @@ export class PlayerObj extends Moveable {
         this.canvas.ctx.fillRect(x, y, sx, sy);
     }
 
-    doInterract(subj: GameObject | undefined): boolean {
+    doInterract(subj: GameObject | undefined, interractionName: string): boolean {
         if (!subj || !subj.interract) {
             return false;
         }
 
-        subj.interract({player: this});
+        subj.interract(interractionName, {player: this});
         return true;
     }
 }
 
 export type TPlayer = PlayerObj;
+
+
+export const getOnPlayerMove = (player: TPlayer) => {
+    const btns: HTMLElement[] = [];
+    const onPlayerMove = () => {
+        let b: typeof btns[number] | undefined;
+        while (b = btns.pop()) { b.remove(); }
+        
+        const neibours = {
+            top: player.gameContext.onPos(getNewPos(player.pos.value, "top")),
+            right: player.gameContext.onPos(getNewPos(player.pos.value, "right")),
+            bottom: player.gameContext.onPos(getNewPos(player.pos.value, "bottom")),
+            left: player.gameContext.onPos(getNewPos(player.pos.value, "left")),
+        };
+
+        for (const [relativeDir, obj] of Object.entries(neibours)) {
+            if (!obj) { continue; }
+            for (const [name, interraction] of Object.entries(obj.interractions)) {
+                const btn = createInterractionButton(interraction.text + " (" + relativeDir + ")");
+                btn.onclick = () => {
+                    player.doInterract(obj, name);
+                }
+                btns.push(btn);
+            }
+        }
+    }
+    
+    // Wait for all current updates and only then update interface
+    return () => setTimeout(onPlayerMove, 0);
+}

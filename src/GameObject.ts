@@ -4,7 +4,7 @@ import { TPlayer } from "./objects/Player.obj";
 import { subscribable, TSubscribable } from "./util";
 
 type InterractCB = (...args: any[]) => any;
-type TInterractions = Record<string, InterractCB>
+type TInterractions = Record<string, {cb: InterractCB, text: string}>
 
 type TGameObjectOptions = {
     collidable: boolean;
@@ -48,7 +48,7 @@ export abstract class GameObject {
         moveable: false,
     }
 
-    protected abstract readonly interractions: TInterractions;
+    abstract readonly interractions: TInterractions;
 
     constructor(gameCtx: TGameContext, start: {x: number, y: number}, size: {x: number, y: number}) {
         this.canvas = gameCtx.canvas;
@@ -56,12 +56,15 @@ export abstract class GameObject {
         this.pos = subscribable(start);
         this.size = subscribable(size);
 
-        this.pos.addOnUpdate(() => updObjects(this));
-        this.size.addOnUpdate(() => updObjects(this));
+        this.pos.addOnUpdate(() => updObjects(this), "Update GameObject.objects dew to POS update");
+        this.size.addOnUpdate(() => updObjects(this), "Update GameObject.objects dew to SIZE update");
         updObjects(this);
     }
 
     abstract draw(...args: any[]): void;
 
-    interract(opt: {player: TPlayer}): boolean { return false };
+    interract(interractionName: keyof typeof this.interractions, opt: {player: TPlayer}): boolean {
+        const success = this.interractions[interractionName]?.cb(opt);
+        return success;
+    };
 }
