@@ -11,7 +11,7 @@ export const subscribable = <T>(value: T): TSubscribable<T> => {
         value,
         addOnUpdate: function(cb, description) {
             this.cbs.push((...args: Parameters<TSubscribable<T>["cbs"][number]>) => {
-                // console.debug(description);
+                console.debug(description);
                 cb(...args);
             });
         },

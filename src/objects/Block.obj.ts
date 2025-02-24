@@ -7,10 +7,10 @@ export class BlockObj extends GameObject {
     color: string;
 
     interractions: GameObject["interractions"] = {
-        punch: {
-            cb: () => { alert("Ouch!"); },
-            text: "punch block"
-        }
+        // punch: {
+        //     cb: () => { alert("Ouch!"); },
+        //     text: "punch block"
+        // }
     };
 
     constructor(gc: TGameContext, start: {x:number, y: number}, size: {x:number; y:number}, color: string) {

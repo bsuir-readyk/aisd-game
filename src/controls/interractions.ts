@@ -25,3 +25,9 @@ export const createInterractionButton = (text: string): HTMLElement => {
 
     return div;
 }
+
+export const removeAllButtons = () => {
+    for (const btn of interractionsContainer.children) {
+        btn.remove();
+    }
+}

@@ -1,4 +1,5 @@
-import { createInterractionButton, setControls } from "../controls";
+import { createInterractionButton } from "../controls";
+import { removeAllButtons } from "../controls/interractions";
 import { redrawItems } from "../controls/inventory";
 import type { TGameContext } from "../GameContext";
 import { GameObject } from "../GameObject";
@@ -19,6 +20,8 @@ export class PlayerObj extends Moveable {
 
     constructor(gameCtx: TGameContext, pos: {x: number, y: number}) {
         super(gameCtx, pos, {x: 1-GAP, y: 1-GAP});
+
+        console.debug("PlayerObj constructor w: ", pos);
         
         const onPlayerMove = getOnPlayerMove(this);
         this.pos.addOnUpdate(onPlayerMove, "Handle player move");
@@ -58,10 +61,8 @@ export class PlayerObj extends Moveable {
 export type TPlayer = PlayerObj;
 
 const getOnPlayerMove = (player: TPlayer) => {
-    const btns: HTMLElement[] = [];
     const onPlayerMove = () => {
-        let b: typeof btns[number] | undefined;
-        while (b = btns.pop()) { b.remove(); }
+        removeAllButtons();
         
         const neibours = {
             top: player.gameContext.onPos(getNewPos(player.pos.value, "top")),
@@ -77,7 +78,6 @@ const getOnPlayerMove = (player: TPlayer) => {
                 btn.onclick = () => {
                     player.doInterract(obj, name);
                 }
-                btns.push(btn);
             }
         }
     }

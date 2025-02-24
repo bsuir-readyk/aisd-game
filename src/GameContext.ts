@@ -1,9 +1,36 @@
 import { TCanvas } from "./Canvas";
 import { setControls } from "./controls";
+import { removeAllButtons } from "./controls/interractions";
 import { GameObject } from "./GameObject";
 import { PlayerObj, TPlayer } from "./objects/Player.obj";
 import { levels, TLevel, TLevelName, TLevels } from "./presets";
 import { subscribable, TSubscribable } from "./util";
+
+
+const getSetPlayerControls = () => {
+    let cleanup = ()=>{};
+    return (player: TPlayer) => {
+        cleanup();
+        cleanup = setControls({
+            left: () => { player.move("left", player.pos.value) },
+            top: () => { player.move("top", player.pos.value) },
+            right: () => { player.move("right", player.pos.value) },
+            bottom: () => { player.move("bottom", player.pos.value) },
+            interract: () => {
+                console.warn("Not implemented");
+            },
+
+            keyboard: {
+                left: ["a", "arrowleft"],
+                top: ["w", "arrowup"],
+                right: ["d", "arrowright"],
+                bottom: ["s", "arrowdown"],
+                interract: ['e', 'shift'],
+            }
+        });
+    } 
+}
+const setPlayerControls = getSetPlayerControls();
 
 export class GameContext {
     /** @description x * level.width + y */
@@ -28,6 +55,9 @@ export class GameContext {
             for(const obj of Object.values(this.objects.value)) {
                 obj.draw();
             }
+            if (window["DEV"]) {
+                window["objs"] = this.objects.value;
+            }
         }, "Redraw bg and all objects");
 
         const onLevel = () => {
@@ -50,24 +80,8 @@ export class GameContext {
                 throw new Error("Player not found on level: " + this.currentLevel.value.name);
             }
 
-            setControls({
-                left: () => { player.move("left", player.pos.value); },
-                top: () => { player.move("top", player.pos.value) },
-                right: () => { player.move("right", player.pos.value) },
-                bottom: () => { player.move("bottom", player.pos.value) },
-                interract: () => {
-                    console.warn("Not implemented");
-                },
-            
-                keyboard: {
-                    left: ["a", "arrowleft"],
-                    top: ["w", "arrowup"],
-                    right: ["d", "arrowright"],
-                    bottom: ["s", "arrowdown"],
-                    interract: ['e', 'shift'],
-                }
-            })
-            
+            removeAllButtons()
+            setPlayerControls(player);
         };
         onLevel();
         this.currentLevel.addOnUpdate(onLevel, "Handle level update");
@@ -82,7 +96,7 @@ export class GameContext {
 
     onPos(pos: {x: number, y: number}): GameObject | undefined {
         const level = this.currentLevel.value.settings;
-        return this.objects.value[pos.y * level.width + pos.x];
+        return this.objects.value[pos.y * 100 + pos.x];
     }
 }
 

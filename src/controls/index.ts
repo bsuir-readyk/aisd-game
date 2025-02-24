@@ -41,7 +41,7 @@ export const setControls = (cbs: TSetControlsProp) => {
     control_bottom.addEventListener("click", cbs.bottom);
     control_interract.addEventListener("click", cbs.interract);
 
-    window.addEventListener("keydown", (e) => {
+    const onKeyDown = (e: KeyboardEvent) => {
         for (const direction of ['left', 'top', 'right', 'bottom', 'interract'] as const) {
             for (const key of cbs.keyboard[direction]) {
                 if (key === e.key.toLowerCase()) {
@@ -49,5 +49,15 @@ export const setControls = (cbs: TSetControlsProp) => {
                 }
             }
         }
-    })
+    }
+    window.addEventListener("keydown", onKeyDown);
+
+    return function cleanup(){
+        control_left.removeEventListener("click", cbs.left);
+        control_top.removeEventListener("click", cbs.top);
+        control_right.removeEventListener("click", cbs.right);
+        control_bottom.removeEventListener("click", cbs.bottom);
+        control_interract.removeEventListener("click", cbs.interract);
+        window.removeEventListener("keydown", onKeyDown);
+    }
 }
