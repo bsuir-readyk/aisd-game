@@ -2,6 +2,9 @@ import { TGameContext } from "../GameContext";
 import { GameObject } from "../GameObject";
 import { BlockObj } from "./Block.obj";
 
+const pattern = new Image();
+pattern.src = "./break_pattern.png";
+
 export class BreakableBlockObj extends BlockObj {
     name = "breakableBlock";
 
@@ -31,16 +34,13 @@ export class BreakableBlockObj extends BlockObj {
             this.size.value.y*BOX
         );
 
-        const pattern = new Image();
-        pattern.src = "./break_pattern.png";
-        pattern.onload = () => {
-            this.canvas.ctx.drawImage(
-                pattern,
-                this.pos.value.x*BOX,
-                this.pos.value.y*BOX,
-                this.size.value.x*BOX,
-                this.size.value.y*BOX,
-            );
-        }
+        
+        this.canvas.ctx.drawImage(
+            pattern,
+            this.pos.value.x*BOX,
+            this.pos.value.y*BOX,
+            this.size.value.x*BOX,
+            this.size.value.y*BOX,
+        );
     }
 }

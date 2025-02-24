@@ -61,7 +61,14 @@ export const levels = {
         height: 7,
         makeMap: (gc) => [
             ...getBorders(gc, {x: 7, y: 7}),
-            // ...fillRow(1, 0, 7, (pos)=>new BreakableBlockObj(gc, pos, {x: 1, y: 1}, 'white')),
+            ...fillRow(0, 0, 4, (pos)=>new BreakableBlockObj(gc, pos, {x: 1, y: 1}, 'white')),
+            ...fillRow(0, 5, 7, (pos)=>new BreakableBlockObj(gc, pos, {x: 1, y: 1}, 'white')),
+            ...fillRow(1, 0, 7, (pos)=>new BreakableBlockObj(gc, pos, {x: 1, y: 1}, 'white')),
+            ...fillRow(2, 0, 7, (pos)=>new BreakableBlockObj(gc, pos, {x: 1, y: 1}, 'white')),
+            ...fillRow(3, 0, 7, (pos)=>new BreakableBlockObj(gc, pos, {x: 1, y: 1}, 'white')),
+            ...fillRow(4, 0, 6, (pos)=>new BreakableBlockObj(gc, pos, {x: 1, y: 1}, 'white')),
+            ...fillRow(5, 0, 7, (pos)=>new BreakableBlockObj(gc, pos, {x: 1, y: 1}, 'white')),
+            ...fillRow(6, 0, 7, (pos)=>new BreakableBlockObj(gc, pos, {x: 1, y: 1}, 'white')),
             new PlayerObj(gc, {x: 1, y: 0}),
             new DoorObj(gc, {x: 4, y: 0}, SimpleKey, () => {
                 gc.setCurrentLevel("mov2");

@@ -1,7 +1,7 @@
 import { createInterractionButton } from "../controls";
 import { removeAllButtons } from "../controls/interractions";
 import { redrawItems } from "../controls/inventory";
-import type { TGameContext } from "../GameContext";
+import { getRefreshActions, type TGameContext } from "../GameContext";
 import { GameObject } from "../GameObject";
 import { TInventoryItem } from "../presets/inventory";
 import { getNewPos, subscribable, TSubscribable } from "../util";
@@ -23,9 +23,10 @@ export class PlayerObj extends Moveable {
 
         console.debug("PlayerObj constructor w: ", pos);
         
-        const onPlayerMove = getOnPlayerMove(this);
-        this.pos.addOnUpdate(onPlayerMove, "Handle player move");
-        onPlayerMove();
+        // need cleanup
+        const refreshActions = getRefreshActions(this);
+        this.gameContext.objects.addOnUpdate(refreshActions, "Refresh player actions");
+        refreshActions();
         
         this.inventory.addOnUpdate((n)=>redrawItems(Object.values(n)), "Redraw inventory on player.inventory update");
         redrawItems(Object.values(this.inventory.value));
@@ -59,29 +60,3 @@ export class PlayerObj extends Moveable {
 }
 
 export type TPlayer = PlayerObj;
-
-const getOnPlayerMove = (player: TPlayer) => {
-    const onPlayerMove = () => {
-        removeAllButtons();
-        
-        const neibours = {
-            top: player.gameContext.onPos(getNewPos(player.pos.value, "top")),
-            right: player.gameContext.onPos(getNewPos(player.pos.value, "right")),
-            bottom: player.gameContext.onPos(getNewPos(player.pos.value, "bottom")),
-            left: player.gameContext.onPos(getNewPos(player.pos.value, "left")),
-        };
-
-        for (const [relativeDir, obj] of Object.entries(neibours)) {
-            if (!obj) { continue; }
-            for (const [name, interraction] of Object.entries(obj.interractions)) {
-                const btn = createInterractionButton(interraction.text + " (" + relativeDir + ")");
-                btn.onclick = () => {
-                    player.doInterract(obj, name);
-                }
-            }
-        }
-    }
-    
-    // Wait for all current updates and only then update interface
-    return () => setTimeout(onPlayerMove, 0);
-}

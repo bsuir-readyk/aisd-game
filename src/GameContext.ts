@@ -1,10 +1,10 @@
 import { TCanvas } from "./Canvas";
 import { setControls } from "./controls";
-import { removeAllButtons } from "./controls/interractions";
+import { createInterractionButton, removeAllButtons } from "./controls/interractions";
 import { GameObject } from "./GameObject";
 import { PlayerObj, TPlayer } from "./objects/Player.obj";
 import { levels, TLevel, TLevelName, TLevels } from "./presets";
-import { subscribable, TSubscribable } from "./util";
+import { getNewPos, subscribable, TSubscribable } from "./util";
 
 
 const getSetPlayerControls = () => {
@@ -31,6 +31,33 @@ const getSetPlayerControls = () => {
     } 
 }
 const setPlayerControls = getSetPlayerControls();
+
+export const getRefreshActions = (player: TPlayer) => {
+    const onPlayerMove = () => {
+        removeAllButtons();
+        
+        const neibours = {
+            top: player.gameContext.onPos(getNewPos(player.pos.value, "top")),
+            right: player.gameContext.onPos(getNewPos(player.pos.value, "right")),
+            bottom: player.gameContext.onPos(getNewPos(player.pos.value, "bottom")),
+            left: player.gameContext.onPos(getNewPos(player.pos.value, "left")),
+        };
+
+        for (const [relativeDir, obj] of Object.entries(neibours)) {
+            if (!obj) { continue; }
+            for (const [name, interraction] of Object.entries(obj.interractions)) {
+                const btn = createInterractionButton(interraction.text + " (" + relativeDir + ")");
+                btn.onclick = () => {
+                    player.doInterract(obj, name);
+                }
+            }
+        }
+    }
+    
+    // Wait for all current updates and only then update interface
+    return () => setTimeout(onPlayerMove, 0);
+}
+
 
 export class GameContext {
     /** @description x * level.width + y */
