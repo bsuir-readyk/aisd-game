@@ -88,6 +88,7 @@ export class GameContext {
         }, "Redraw bg and all objects");
 
         const onLevel = () => {
+            delete this.objects.cbs["Refresh player actions"];
             this.objects.value = [];
             levels[this.currentLevel.value.name].makeMap(this);
             this.canvas.resize(this.currentLevel.value.settings)

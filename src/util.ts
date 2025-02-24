@@ -3,26 +3,27 @@ import { TMoveDir } from "./objects/Moveable.abs.obj";
 export type TSubscribable<T> = {
     value: T;
     readonly addOnUpdate: (cb: (newValue: T)=>void, description: string) => void;
-    readonly cbs: ((newValue: T)=>void)[];
+    readonly cbs: Record<string, ((newValue: T)=>void)>;
 };
 
 export const subscribable = <T>(value: T): TSubscribable<T> => {
     const result: TSubscribable<T> = {
         value,
         addOnUpdate: function(cb, description) {
-            this.cbs.push((...args: Parameters<TSubscribable<T>["cbs"][number]>) => {
+            const fn = (...args: Parameters<TSubscribable<T>["cbs"][number]>) => {
                 console.debug(description);
                 cb(...args);
-            });
+            };
+            this.cbs[description] = fn;
         },
-        cbs: [],
+        cbs: {},
     };
     return new Proxy(result, {
         set(target, p, newValue) {
             if (target[p] !== newValue) {
                 target[p] = newValue;
             
-                for (const cb of target.cbs) {
+                for (const cb of Object.values(target.cbs)) {
                     cb(newValue);
                 }
 

@@ -14,8 +14,6 @@ export abstract class Moveable extends GameObject {
         const newPos = getNewPos(this.pos.value, dir);
         const triggerPos = getNewPos(triggeredOn, dir);
         const subj = this.gameContext.onPos(triggerPos);
-
-        console.debug(dir, triggeredOn, triggerPos, subj);
         
         if(subj === undefined) {
             this.pos.value = newPos;

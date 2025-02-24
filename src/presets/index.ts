@@ -31,14 +31,14 @@ const fillRow: TFillRow = (y, xs, xe, who) => {
 
 
 export const levels = {
-    hello: {
+    playground: {
         width: 11,
         height: 16,
         makeMap: (gc) => [
             new BlockObj(gc, {x: 5, y: 13}, {x: 3, y: 1}, 'black'),
             new MoveableBlockObj(gc, {x: 2, y: 10}, {x: 1, y: 1}, 'green'),
             new DoorObj(gc, {x: 0, y: 0}, SimpleKey, () => {
-                gc.setCurrentLevel("claus");
+                gc.setCurrentLevel("kopatel");
             }),
             new PlayerObj(gc, {x: 5, y: 15}),
             new GiveAwayBlock(gc, {x: 5, y: 0}, {x:1, y:1}, SimpleKey)
@@ -50,7 +50,7 @@ export const levels = {
         makeMap: (gc) => [
             ...getBorders(gc, {x: 3, y: 1}),
             new DoorObj(gc, {x: 0, y: 0}, SimpleKey, () => {
-                gc.setCurrentLevel("kopatel");
+                gc.setCurrentLevel("playground");
             }),
             new PlayerObj(gc, {x: 1, y: 0}),
             new GiveAwayBlock(gc, {x: 2, y: 0}, {x:1, y:1}, SimpleKey)
@@ -71,7 +71,7 @@ export const levels = {
             ...fillRow(6, 0, 7, (pos)=>new BreakableBlockObj(gc, pos, {x: 1, y: 1}, 'white')),
             new PlayerObj(gc, {x: 1, y: 0}),
             new DoorObj(gc, {x: 4, y: 0}, SimpleKey, () => {
-                gc.setCurrentLevel("mov2");
+                gc.setCurrentLevel("claus");
             }),
             new GiveAwayBlock(gc, {x: 6, y: 4}, {x:1, y:1}, SimpleKey)
         ]
@@ -87,7 +87,9 @@ export const levels = {
             new PlayerObj(gc, {x: 1, y: 2}),
             new MoveableBlockObj(gc, {x: 3, y: 2}, {x: 2, y: 1}, "green"),
             new BlockObj(gc, {x: 4, y: 3}, {x: 3, y: 1}, 'black'),
-            new DoorObj(gc, {x: 0, y: 2}, SimpleKey, ()=>{}),
+            new DoorObj(gc, {x: 0, y: 2}, SimpleKey, ()=>{
+                gc.setCurrentLevel("mov2");
+            }),
             new GiveAwayBlock(gc, {x: 3, y: 3}, {x:1, y:1}, SimpleKey)
         ]
     },
