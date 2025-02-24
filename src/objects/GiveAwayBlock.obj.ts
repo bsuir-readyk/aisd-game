@@ -10,7 +10,7 @@ export class GiveAwayBlock extends BlockObj {
     interractions = {
         punch: {
             cb: ({player}: TInterractionOpt) => { player.addInventory(this.item) },
-            text: "punch block ***"
+            text: "Get something from block..."
         }
     };
 

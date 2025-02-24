@@ -7,7 +7,11 @@ export type TInventoryItem = {
 
 // const SimpleKeyImage = new Image()
 // SimpleKeyImage.src = ;
-export const SimpleKey: TInventoryItem = {
-    name: "SimpleKey",
+export const WhiteKey: TInventoryItem = {
+    name: "WhiteKey",
     img: "./simpleKey.jpg",
+}
+export const RedKey: TInventoryItem = {
+    name: "RedKey",
+    img: "./simpleKeyRed.jpg",
 }
